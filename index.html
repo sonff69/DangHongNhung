@@ -1,43 +1,656 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông tin sinh viên</title>
+    <title>Đặng Hồng Nhung — Digital Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dreamCream: '#FCF8F2',
+                        dreamPink: '#F2A1B5',
+                        dreamRose: '#D27D90',
+                        dreamGreen: '#7D9C8C',
+                        dreamSlate: '#3E4E45',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         body {
-            font-family: sans-serif;
-            background-color: #1a1a1a;
-            color: #ffffff;
-            padding: 20px;
+            background: linear-gradient(135deg, #FCF8F2 0%, #FBF0ED 50%, #EBF4F0 100%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
         }
-        .container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-width: 500px;
+        /* Custom floating elements and petal animation */
+        .petal {
+            position: absolute;
+            background: radial-gradient(circle, rgba(242,161,181,0.6) 0%, rgba(210,125,144,0.1) 70%);
+            border-radius: 50% 0 50% 50%;
+            pointer-events: none;
+            z-index: 10;
+            animation: floatDown linear infinite;
         }
-        .info-box {
-            background-color: #2d3238;
-            border: 1px solid #3e444d;
-            border-radius: 6px;
-            padding: 12px 16px;
-            font-size: 16px;
-            width: fit-content;
-            max-width: 100%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        @keyframes floatDown {
+            0% {
+                transform: translateY(-10%) rotate(0deg) translateX(0);
+                opacity: 0;
+            }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% {
+                transform: translateY(110vh) rotate(360deg) translateX(100px);
+                opacity: 0;
+            }
+        }
+        /* Glassmorphism classes */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.65);
+            transform: translateY(-6px);
+            border-color: rgba(242, 161, 181, 0.4);
+            box-shadow: 0 20px 40px -15px rgba(210, 125, 144, 0.15);
+        }
+        /* Elegant custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FCF8F2;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E0ADB8;
+            border-radius: 99px;
         }
     </style>
 </head>
-<body>
+<body class="text-[#3E4D44] antialiased">
 
-    <div class="container">
-        <div class="info-box">Hán Nguyễn Thuỳ Dung</div>
-        <div class="info-box">25042071</div>
-        <div class="info-box">Ngôn ngữ và Văn hoá Nhật</div>
-        <div class="info-box">Đại học Ngoại Ngữ - ĐHQGHN</div>
-        <div class="info-box">Nhập môn công nghệ số và ứng dụng trí tuệ nhân tạo</div>
+    <!-- Canvas background for floating petals -->
+    <div id="petal-container" class="fixed inset-0 pointer-events-none z-10 overflow-hidden"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 bg-[#FCF8F2]/60 backdrop-blur-md border-b border-white/40">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="font-serif text-2xl font-bold tracking-wide text-dreamRose hover:opacity-80 transition-opacity">
+                Nhung Dang<span class="text-dreamGreen">.</span>
+            </a>
+            <div class="hidden md:flex items-center gap-8 font-medium text-sm tracking-wider uppercase text-dreamSlate">
+                <a href="#about" class="hover:text-dreamRose transition-colors">Giới thiệu</a>
+                <a href="#projects" class="hover:text-dreamRose transition-colors">Dự án</a>
+                <a href="#reflection" class="hover:text-dreamRose transition-colors">Trải nghiệm</a>
+                <a href="https://drive.google.com/drive/folders/1UoOynRfChTmO_h1SkFGS9jw6E_LCuGZY?usp=drive_link" target="_blank" class="bg-dreamRose/10 text-dreamRose hover:bg-dreamRose hover:text-white px-5 py-2.5 rounded-full transition-all duration-300 flex items-center gap-2 border border-dreamRose/20 shadow-sm">
+                    <i class="fa-brands fa-google-drive"></i> Xem bài tập trên GG drive
+                </a>
+            </div>
+            <!-- Mobile Menu Toggle -->
+            <button onclick="toggleMobileMenu()" class="md:hidden text-2xl text-dreamSlate hover:text-dreamRose transition-colors">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+        </div>
+        <!-- Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-[#FCF8F2] border-b border-white/40 p-6 flex flex-col gap-4 shadow-lg">
+            <a href="#about" onclick="toggleMobileMenu()" class="font-medium text-dreamSlate">Giới thiệu</a>
+            <a href="#projects" onclick="toggleMobileMenu()" class="font-medium text-dreamSlate">Dự án</a>
+            <a href="#reflection" onclick="toggleMobileMenu()" class="font-medium text-dreamSlate">Trải nghiệm</a>
+            <a href="https://drive.google.com/drive/folders/1UoOynRfChTmO_h1SkFGS9jw6E_LCuGZY?usp=drive_link" target="_blank" class="bg-dreamRose text-white px-5 py-3 rounded-full text-center transition-all duration-300 flex items-center justify-center gap-2 shadow-md">
+                <i class="fa-brands fa-google-drive"></i> Xem bài tập trên GG drive
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative min-h-[90vh] flex items-center py-12 px-6">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full">
+            <!-- Left content -->
+            <div class="lg:col-span-7 flex flex-col gap-6 order-2 lg:order-1 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 bg-dreamGreen/10 text-dreamGreen px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase self-center lg:self-start border border-dreamGreen/20">
+                    <span class="w-2 h-2 rounded-full bg-dreamGreen animate-pulse"></span>
+                    ULIS - VNU Student Portfolio
+                </div>
+                <h1 class="font-serif text-5xl sm:text-6xl lg:text-7xl leading-tight text-[#2B3B30] font-bold">
+                    Khám phá <span class="italic text-dreamRose font-normal">ngôn ngữ</span> & <span class="relative">trí tuệ số
+                        <span class="absolute -bottom-2 left-0 w-full h-[6px] bg-dreamPink/30 rounded-full"></span>
+                    </span>
+                </h1>
+                <p class="text-base sm:text-lg text-[#5E6F64] max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
+                    Xin chào, mình là <strong>Đặng Hồng Nhung</strong>, sinh viên Khoa Ngôn ngữ & Văn hóa Ả Rập tại ULIS. Nơi đây lưu giữ hành trình kết hợp vẻ đẹp văn hóa cổ điển Trung Đông cùng thế giới công nghệ số đầy màu sắc.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                    <a href="#projects" class="w-full sm:w-auto text-center bg-dreamRose hover:bg-dreamRose/90 text-white px-8 py-4 rounded-full font-semibold shadow-lg shadow-dreamRose/25 transition-all duration-300 hover:-translate-y-0.5">
+                        Khám Phá Dự Án
+                    </a>
+                    <a href="#about" class="w-full sm:w-auto text-center border border-dreamGreen/30 hover:border-dreamGreen/60 text-dreamSlate px-8 py-4 rounded-full font-semibold transition-all duration-300">
+                        Về Bản Thân Mình
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Right profile picture (Dreamy style matching image 1) -->
+            <div class="lg:col-span-5 flex justify-center order-1 lg:order-2">
+                <div class="relative group">
+                    <!-- Rotating decorative rings representing delicate blossoms and starry nights -->
+                    <div class="absolute -inset-4 bg-gradient-to-tr from-dreamPink/40 via-dreamGreen/20 to-dreamRose/40 rounded-[3rem] blur-xl opacity-80 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+                    <div class="absolute -inset-1 rounded-[2.5rem] bg-gradient-to-tr from-white via-dreamPink/20 to-white opacity-40"></div>
+                    
+                    <div class="relative w-72 h-96 sm:w-80 sm:h-[28rem] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white/80 transform group-hover:scale-[1.02] transition duration-500 ease-out">
+                        <img src="Hình 1.jpg" alt="Đặng Hồng Nhung" class="w-full h-full object-cover object-center transition duration-700 ease-out group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dreamRose/30 via-transparent to-transparent"></div>
+                    </div>
+                    <!-- Small absolute ornaments mimicking petals or delicate sparkles -->
+                    <div class="absolute -bottom-4 -left-4 bg-[#FCF8F2] p-4 rounded-2xl shadow-xl border border-white/60 flex items-center gap-3">
+                        <span class="text-2xl text-dreamRose"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+                        <div class="text-left">
+                            <p class="text-xs text-[#8C9B90] font-medium leading-none">Khoá học</p>
+                            <p class="text-sm text-dreamSlate font-bold">Digital Tech & AI</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section / About Me -->
+    <section id="about" class="py-24 px-6 relative bg-white/40">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                <div class="lg:col-span-5 flex flex-col gap-6">
+                    <span class="text-dreamRose font-semibold tracking-wider uppercase text-sm">Giới thiệu bản thân</span>
+                    <h2 class="font-serif text-4xl sm:text-5xl text-dreamSlate font-bold leading-tight">
+                        Khi trái tim ngôn ngữ nhịp bước cùng <span class="italic text-dreamGreen font-normal">kỹ thuật số</span>
+                    </h2>
+                    <p class="text-base text-[#5E6F64] leading-relaxed font-light">
+                        Mình là một cô gái học ngoại ngữ luôn tò mò về công nghệ. Tiếng Ả Rập (MSA) mang lại cho mình góc nhìn sâu sắc về một thế giới Ả Rập cổ kính đầy chất thơ, trong khi môn học <strong>Nhập môn công nghệ số và ứng dụng AI</strong> lại trao cho mình đôi cánh mới để truyền tải những câu chuyện văn hoá ấy qua ngôn ngữ số hiện đại.
+                    </p>
+                </div>
+                
+                <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Info details inside glassmorphism grids -->
+                    <div class="glass-card p-6 rounded-2xl">
+                        <div class="w-12 h-12 bg-dreamPink/20 text-dreamRose rounded-xl flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-[#2B3B30] mb-1">Thông tin cơ bản</h4>
+                        <p class="text-sm text-[#5E6F64] leading-relaxed">
+                            Đặng Hồng Nhung<br>
+                            Mã số sinh viên: 25042696<br>
+                            Lớp: QH2025.F1.A2
+                        </p>
+                    </div>
+                    
+                    <div class="glass-card p-6 rounded-2xl">
+                        <div class="w-12 h-12 bg-dreamGreen/20 text-dreamGreen rounded-xl flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-[#2B3B30] mb-1">Học phần học thuật</h4>
+                        <p class="text-sm text-[#5E6F64] leading-relaxed">
+                            [VNU1001_E252059]<br>
+                            Nhập môn công nghệ số và ứng dụng trí tuệ nhân tạo.
+                        </p>
+                    </div>
+                    
+                    <div class="glass-card p-6 rounded-2xl">
+                        <div class="w-12 h-12 bg-dreamPink/20 text-dreamRose rounded-xl flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-[#2B3B30] mb-1">Sở thích & Niềm vui</h4>
+                        <p class="text-sm text-[#5E6F64] leading-relaxed">
+                            Thưởng thức những ly cà phê muối Hà Nội, dịch thuật các câu thành ngữ Ả Rập cổ, thiết kế tranh minh họa màu nước ấm áp bằng AI.
+                        </p>
+                    </div>
+                    
+                    <div class="glass-card p-6 rounded-2xl">
+                        <div class="w-12 h-12 bg-dreamGreen/20 text-dreamGreen rounded-xl flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-[#2B3B30] mb-1">Định hướng tương lai</h4>
+                        <p class="text-sm text-[#5E6F64] leading-relaxed">
+                            Xây dựng các nội dung số cầu nối văn hóa Việt - Ả Rập, ứng dụng nhuần nhuyễn các kỹ nghệ prompt và các mô hình GenAI một cách thông minh và có trách nhiệm.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Google Drive Call To Action Section (Required link before projects section) -->
+    <section class="py-16 px-6 relative">
+        <div class="max-w-4xl mx-auto text-center glass-card p-10 rounded-3xl border border-dreamPink/20 bg-gradient-to-br from-white/60 via-[#FFF9FA]/80 to-white/60 shadow-xl">
+            <span class="text-4xl text-dreamPink mb-4 block"><i class="fa-brands fa-google-drive animate-bounce"></i></span>
+            <h3 class="font-serif text-3xl font-bold text-[#2B3B30] mb-3">Tài liệu và Báo cáo hoàn thiện</h3>
+            <p class="text-sm sm:text-base text-[#5E6F64] max-w-xl mx-auto mb-8 leading-relaxed font-light">
+                Toàn bộ các bản thảo báo cáo chi tiết, nhật ký thiết kế prompt cùng các định dạng PDF chuẩn chỉnh cho từng bài tập được lưu trữ trực tuyến và minh bạch. Bạn có thể xem ngay tại Google Drive chính thức dưới đây:
+            </p>
+            <a href="https://drive.google.com/drive/folders/1UoOynRfChTmO_h1SkFGS9jw6E_LCuGZY?usp=drive_link" target="_blank" class="inline-flex items-center gap-3 bg-dreamRose hover:bg-dreamRose/90 text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-dreamRose/20 transition-all duration-300 hover:-translate-y-1">
+                <i class="fa-brands fa-google-drive text-lg"></i> Xem bài tập trên GG drive
+            </a>
+        </div>
+    </section>
+
+    <!-- Projects Portfolio Section -->
+    <section id="projects" class="py-24 px-6 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-16 flex flex-col gap-4">
+                <span class="text-dreamGreen font-semibold tracking-wider uppercase text-sm">Các sản phẩm thực hành</span>
+                <h2 class="font-serif text-4xl sm:text-5xl text-dreamSlate font-bold">Học tập & Ứng dụng số</h2>
+                <div class="h-1 w-20 bg-dreamPink mx-auto rounded-full"></div>
+                <p class="text-sm text-[#5E6F64] leading-relaxed font-light">
+                    Tuyển tập 6 bài tập lớn trong hành trình tự khám phá bản thân và rèn luyện kỹ năng công nghệ để giải quyết các bài toán giao thoa văn hóa ngôn ngữ thực tiễn.
+                </p>
+            </div>
+
+            <!-- Grid containing 6 assignments -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Bài 1 -->
+                <div onclick="openProjectModal(1)" class="glass-card p-8 rounded-2xl flex flex-col justify-between h-[360px] cursor-pointer group">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-dreamPink tracking-widest uppercase">Bài tập 1</span>
+                            <span class="text-[#8C9B90] text-sm"><i class="fa-solid fa-folder-open"></i></span>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-[#2B3B30] group-hover:text-dreamRose transition-colors">Thao tác cơ bản với tệp và thư mục</h3>
+                        <p class="text-xs text-[#5E6F64] leading-relaxed font-light line-clamp-4">
+                            Hệ thống hóa học liệu của một sinh viên chuyên ngành ngoại ngữ. Sắp xếp thông minh giữa các slide bài giảng, thư viện từ điển, sách chuyên khảo Ả Rập và file thiết kế đồ họa gọn gàng, đặt tên file theo chuẩn sư phạm giúp tối ưu hóa 100% thời gian tìm kiếm.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-dreamPink/10">
+                        <span class="text-xs font-bold text-dreamGreen uppercase tracking-wider">Xem chi tiết bài học</span>
+                        <span class="w-8 h-8 rounded-full bg-dreamGreen/10 group-hover:bg-dreamGreen group-hover:text-white text-dreamGreen flex items-center justify-center transition-all duration-300"><i class="fa-solid fa-arrow-right text-xs"></i></span>
+                    </div>
+                </div>
+
+                <!-- Bài 2 -->
+                <div onclick="openProjectModal(2)" class="glass-card p-8 rounded-2xl flex flex-col justify-between h-[360px] cursor-pointer group">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-dreamPink tracking-widest uppercase">Bài tập 2</span>
+                            <span class="text-[#8C9B90] text-sm"><i class="fa-solid fa-magnifying-glass"></i></span>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-[#2B3B30] group-hover:text-dreamRose transition-colors">Tìm kiếm & Đánh giá thông tin học thuật</h3>
+                        <p class="text-xs text-[#5E6F64] leading-relaxed font-light line-clamp-4">
+                            Báo cáo nghiên cứu mini: "Sự giao thoa văn hóa và ngôn ngữ qua thành ngữ phổ biến trong tiếng Ả Rập tiêu chuẩn (MSA)". Tìm kiếm trên Google Scholar, tạp chí học thuật ULIS, chọn lọc 10 tài liệu kinh điển (Clive Holes, Said Badawi) để so sánh các góc độ nhận thức và phương pháp dịch Việt - Ả Rập.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-dreamPink/10">
+                        <span class="text-xs font-bold text-dreamGreen uppercase tracking-wider">Xem chi tiết bài học</span>
+                        <span class="w-8 h-8 rounded-full bg-dreamGreen/10 group-hover:bg-dreamGreen group-hover:text-white text-dreamGreen flex items-center justify-center transition-all duration-300"><i class="fa-solid fa-arrow-right text-xs"></i></span>
+                    </div>
+                </div>
+
+                <!-- Bài 3 -->
+                <div onclick="openProjectModal(3)" class="glass-card p-8 rounded-2xl flex flex-col justify-between h-[360px] cursor-pointer group">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-dreamPink tracking-widest uppercase">Bài tập 3</span>
+                            <span class="text-[#8C9B90] text-sm"><i class="fa-solid fa-brain"></i></span>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-[#2B3B30] group-hover:text-dreamRose transition-colors">Kỹ nghệ thiết kế Prompt trong học tập</h3>
+                        <p class="text-xs text-[#5E6F64] leading-relaxed font-light line-clamp-4">
+                            Tạo trợ lý AI ôn tập Triết học Mác-Lênin. Phát triển hệ thống prompt từ Cơ bản, Cải tiến đến Nâng cao (tích hợp kỹ thuật Role + Constraints + CoT + Few-shot) ứng dụng khung tư duy CREATE và mẹo chiến thuật "Split and Conquer" giúp tránh triệt để lỗi "ảo tưởng" (hallucination) của AI.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-dreamPink/10">
+                        <span class="text-xs font-bold text-dreamGreen uppercase tracking-wider">Xem chi tiết bài học</span>
+                        <span class="w-8 h-8 rounded-full bg-dreamGreen/10 group-hover:bg-dreamGreen group-hover:text-white text-dreamGreen flex items-center justify-center transition-all duration-300"><i class="fa-solid fa-arrow-right text-xs"></i></span>
+                    </div>
+                </div>
+
+                <!-- Bài 4 -->
+                <div onclick="openProjectModal(4)" class="glass-card p-8 rounded-2xl flex flex-col justify-between h-[360px] cursor-pointer group">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-dreamPink tracking-widest uppercase">Bài tập 4</span>
+                            <span class="text-[#8C9B90] text-sm"><i class="fa-solid fa-envelope-open-text"></i></span>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-[#2B3B30] group-hover:text-dreamRose transition-colors">Giao tiếp Email & Hợp tác trực tuyến</h3>
+                        <p class="text-xs text-[#5E6F64] leading-relaxed font-light line-clamp-4">
+                            Ứng dụng kỹ năng mềm thông qua 4 email mô phỏng thực tế: xin tài liệu giảng viên, đề xuất hợp tác nhóm môn học Giao tiếp liên văn hóa, đơn xin thực tập dịch thuật và giải quyết xung đột khi thành viên trễ deadline. Ứng dụng quy trình phản hồi đồng đẳng để tự cải tiến.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-dreamPink/10">
+                        <span class="text-xs font-bold text-dreamGreen uppercase tracking-wider">Xem chi tiết bài học</span>
+                        <span class="w-8 h-8 rounded-full bg-dreamGreen/10 group-hover:bg-dreamGreen group-hover:text-white text-dreamGreen flex items-center justify-center transition-all duration-300"><i class="fa-solid fa-arrow-right text-xs"></i></span>
+                    </div>
+                </div>
+
+                <!-- Bài 5 -->
+                <div onclick="openProjectModal(5)" class="glass-card p-8 rounded-2xl flex flex-col justify-between h-[360px] cursor-pointer group">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-dreamPink tracking-widest uppercase">Bài tập 5</span>
+                            <span class="text-[#8C9B90] text-sm"><i class="fa-solid fa-palette"></i></span>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-[#2B3B30] group-hover:text-dreamRose transition-colors">AI tạo sinh trong sáng tạo nội dung số</h3>
+                        <p class="text-xs text-[#5E6F64] leading-relaxed font-light line-clamp-4">
+                            So sánh văn hóa "Cà phê Gừng (Gahwa - Ả Rập) & Cà phê Muối (Việt Nam)" qua Infographic. Tạo ảnh nghệ thuật bằng Bing DALL-E 3, tự dàn trang trên Canva, đồng thời phân tích ranh giới đạo đức bản quyền cùng các thiên kiến văn hóa rập khuôn còn tồn tại trong AI.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-dreamPink/10">
+                        <span class="text-xs font-bold text-dreamGreen uppercase tracking-wider">Xem chi tiết bài học</span>
+                        <span class="w-8 h-8 rounded-full bg-dreamGreen/10 group-hover:bg-dreamGreen group-hover:text-white text-dreamGreen flex items-center justify-center transition-all duration-300"><i class="fa-solid fa-arrow-right text-xs"></i></span>
+                    </div>
+                </div>
+
+                <!-- Bài 6 -->
+                <div onclick="openProjectModal(6)" class="glass-card p-8 rounded-2xl flex flex-col justify-between h-[360px] cursor-pointer group">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-dreamPink tracking-widest uppercase">Bài tập 6</span>
+                            <span class="text-[#8C9B90] text-sm"><i class="fa-solid fa-shield-halved"></i></span>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-[#2B3B30] group-hover:text-dreamRose transition-colors">Sử dụng AI có trách nhiệm học thuật</h3>
+                        <p class="text-xs text-[#5E6F64] leading-relaxed font-light line-clamp-4">
+                            Chuẩn bị bài thuyết trình "Ảnh hưởng của tiếng Ả Rập lên từ vựng tiếng Anh". Tự phản biện lỗi dịch thuật của AI về nguồn gốc sâu xa của từ "Safari", đồng thời thiết lập 6 Nguyên tắc vàng cá nhân về đạo đức sử dụng AI để luôn giữ thế chủ động và liêm chính.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-dreamPink/10">
+                        <span class="text-xs font-bold text-dreamGreen uppercase tracking-wider">Xem chi tiết bài học</span>
+                        <span class="w-8 h-8 rounded-full bg-dreamGreen/10 group-hover:bg-dreamGreen group-hover:text-white text-dreamGreen flex items-center justify-center transition-all duration-300"><i class="fa-solid fa-arrow-right text-xs"></i></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- General Reflection Section -->
+    <section id="reflection" class="py-24 px-6 relative bg-gradient-to-b from-white/20 to-transparent">
+        <div class="max-w-4xl mx-auto text-center flex flex-col gap-8">
+            <span class="text-dreamRose font-semibold tracking-wider uppercase text-sm">Nhìn lại hành trình</span>
+            <h2 class="font-serif text-4xl sm:text-5xl text-dreamSlate font-bold">Chạm tay vào tương lai số</h2>
+            <div class="h-1 w-20 bg-dreamPink mx-auto rounded-full"></div>
+            
+            <div class="text-left bg-white/50 backdrop-blur-md p-8 sm:p-10 rounded-2xl border border-white/60 space-y-6 text-[#5E6F64] leading-relaxed font-light text-base">
+                <p>
+                    Trải qua học phần <strong>Nhập môn công nghệ số và ứng dụng trí tuệ nhân tạo</strong>, mình nhận ra một bài học vô cùng quý giá: <em class="text-dreamSlate font-semibold">AI chỉ thực sự tỏa sáng khi được soi rọi bởi trí tuệ và cái nhìn nhạy bén của con người</em>. Đối với những sinh viên chuyên ngành Ngôn ngữ & Văn hóa như mình, AI không chỉ là chiếc máy tính thông thường, mà là một người trợ lý hỗ trợ tư duy, giúp chúng mình rút ngắn thời gian xử lý thủ công để tập trung sâu hơn vào nghiên cứu ý nghĩa tầng sâu, giải mã những khoảng trống liên văn hóa.
+                </p>
+                <p>
+                    Từ việc sắp xếp tài liệu một cách khoa học, nghiên cứu thành ngữ Ả Rập, cho tới khi tự mình đặt bút thiết kế các câu prompt Triết học hay vẽ nên những ly cà phê ấm áp qua ảnh màu nước của AI, mỗi bài tập là một cột mốc đánh dấu sự trưởng thành trong tư duy giải quyết vấn đề. Mình hiểu rõ thế nào là sự thiên lệch văn hóa của dữ liệu máy móc, và tự đúc rút được 6 Quy tắc vàng cá nhân để không bao giờ "lười biếng tư duy" hay sao chép thụ động.
+                </p>
+                <p class="font-medium text-dreamSlate italic text-center pt-2">
+                    "Công nghệ số mở ra cánh cửa, nhưng sự thấu cảm văn hóa và tư duy nghiêm túc mới là thứ giúp chúng ta bước đi vững vàng."
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dreamSlate text-[#FCF8F2] py-12 px-6 border-t border-dreamSlate">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="text-center md:text-left">
+                <p class="font-serif text-2xl font-bold text-dreamPink">Đặng Hồng Nhung</p>
+                <p class="text-xs text-[#8C9B90] mt-1 font-light">QH2025.F1.A2 — Khoa Ngôn ngữ & Văn hóa Ả Rập (ULIS - VNU)</p>
+            </div>
+            <div class="flex items-center gap-6 text-xl">
+                <a href="https://drive.google.com/drive/folders/1UoOynRfChTmO_h1SkFGS9jw6E_LCuGZY?usp=drive_link" target="_blank" class="hover:text-dreamPink transition-colors"><i class="fa-brands fa-google-drive"></i></a>
+                <a href="mailto:hongnhung@gmail.com" class="hover:text-dreamPink transition-colors"><i class="fa-solid fa-envelope"></i></a>
+            </div>
+            <div class="text-center md:text-right text-xs text-[#8C9B90] font-light">
+                <p>&copy; 2026 Nhung Dang. Created with love and digital passion.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE EXPANSION MODALS FOR 6 PROJECTS (Rich in-page Details) -->
+    <div id="project-modal" class="fixed inset-0 bg-[#3E4D44]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#FCF8F2] w-full max-w-3xl max-h-[85vh] overflow-y-auto rounded-3xl p-6 sm:p-10 shadow-2xl relative border border-white/60 transform scale-95 transition-all duration-300" id="modal-content">
+            <!-- Close Button -->
+            <button onclick="closeProjectModal()" class="absolute top-6 right-6 text-2xl text-dreamSlate hover:text-dreamRose transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div id="modal-body" class="space-y-6">
+                <!-- Content generated via JavaScript depending on card clicked -->
+            </div>
+        </div>
     </div>
 
+    <!-- JavaScript code for interactive effects -->
+    <script>
+        // Generate floating flower petals (Nhung's soft dreamy flowers aesthetic)
+        const petalContainer = document.getElementById('petal-container');
+        const petalCount = 15;
+
+        for (let i = 0; i < petalCount; i++) {
+            createPetal();
+        }
+
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            
+            // Random styling for natural look
+            const size = Math.random() * 15 + 10; // 10px to 25px
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size}px`;
+            petal.style.left = `${Math.random() * 100}vw`;
+            
+            // Random speed & delay for smooth staggered fall
+            const duration = Math.random() * 8 + 6; // 6s to 14s
+            const delay = Math.random() * -12; // Start immediately
+            petal.style.animationDuration = `${duration}s`;
+            petal.style.animationDelay = `${delay}s`;
+            
+            petalContainer.appendChild(petal);
+            
+            // Respawn after animation ends to save memory
+            petal.addEventListener('animationiteration', () => {
+                petal.style.left = `${Math.random() * 100}vw`;
+            });
+        }
+
+        // Toggle Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Project details data mapping to Nhung's actual assignment files
+        const projectData = {
+            1: {
+                title: "Quản lý tệp và thư mục khoa học",
+                tag: "Bài tập thực hành 1",
+                icon: "fa-folder-open text-dreamPink",
+                intro: "Dự án nền tảng giúp hệ thống hóa toàn bộ không gian số phục vụ chuyên ngành Ngôn ngữ & Văn hóa Ả Rập.",
+                details: `
+                    <h5 class="text-base font-bold text-dreamSlate">1. Mục tiêu và Thách thức</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed">Khi bước chân vào ULIS, khối lượng học liệu vô cùng đồ sộ giữa các bài dịch, tệp âm thanh nghe thử, từ điển Fusha (MSA) khổng lồ và các báo cáo học phần số dễ khiến máy tính rơi vào tình trạng lộn xộn. Mục tiêu là thiết kế cấu trúc cây thư mục chuẩn hóa giúp tối ưu hóa thời gian tìm kiếm dưới 5 giây.</p>
+                    
+                    <h5 class="text-base font-bold text-dreamSlate mt-4">2. Mô hình tổ chức tối ưu</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed">Hệ thống thư mục được chia làm các nhánh rành mạch:</p>
+                    <ul class="list-disc list-inside text-sm text-[#5E6F64] space-y-1 pl-2">
+                        <li><strong>[VNU1001_Digital_Tech]</strong>: Lưu trữ học phần này, chia theo Assignments, Notes và Final_Project.</li>
+                        <li><strong>[ULIS_Arabic_MSA]</strong>: Gồm các tệp âm thanh đàm thoại, ngữ pháp cổ điển, thành ngữ và bài nghiên cứu khoa học.</li>
+                        <li><strong>[Personal_Creative]</strong>: Chứa các thiết kế hình ảnh, watercolor prompts phục vụ các dự án truyền thông câu lạc bộ.</li>
+                    </ul>
+                    
+                    <h5 class="text-base font-bold text-dreamSlate mt-4">3. Quy tắc đặt tên tệp (Naming Convention)</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed">Mọi tệp tin đều được áp dụng quy tắc định danh không dấu, phân tách bằng dấu gạch dưới, bao gồm mã học phần, tên nhiệm vụ, và ngày tháng rõ ràng. Nhờ vậy, máy tính dễ quét và bản thân mình luôn làm việc với sự rõ ràng tuyệt đối.</p>
+                `
+            },
+            2: {
+                title: "Nghiên cứu Giao thoa Văn hóa qua Thành ngữ MSA",
+                tag: "Bài tập thực hành 2",
+                icon: "fa-magnifying-glass text-dreamGreen",
+                intro: "Tìm kiếm học thuật và đánh giá dữ liệu nhằm thực hiện báo cáo chuyên sâu về dịch thuật thành ngữ tiếng Ả Rập.",
+                details: `
+                    <h5 class="text-base font-bold text-dreamSlate">1. Phương pháp tìm kiếm thông tin</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed">Mình đã tiến hành quy trình tìm kiếm hệ thống qua các cơ sở dữ liệu học thuật như: Google Scholar, thư viện số ULIS (VNU-LIC), tạp chí Journal of Arabic Linguistics, Lingua Arabica và tài nguyên mở từ Al-Jazeera Learning Arabic.</p>
+                    
+                    <h5 class="text-base font-bold text-dreamSlate mt-4">2. Xu hướng học thuật phát hiện</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed">Hệ thống tài liệu tham khảo cốt lõi được sàng lọc tinh gọn gồm 10 tài liệu tối ưu nhất và phân chia làm 3 xu hướng tiếp cận rõ rệt:</p>
+                    <ul class="list-disc list-inside text-sm text-[#5E6F64] space-y-1 pl-2">
+                        <li><strong>Ngôn ngữ học nền tảng & ngữ pháp cấu trúc</strong>: Nghiên cứu kinh điển của Giáo sư Clive Holes (Oxford) và cố học giả Said Badawi giúp hiểu rõ cấu trúc cố định của MSA.</li>
+                        <li><strong>Ngôn ngữ học nhận thức và văn hóa</strong>: Nghiên cứu của Al-Khawalda (2022) phân tích các 'ẩn dụ khái niệm' (con mắt, trái tim, sa mạc, lạc đà, Bedouin) phản ánh thế giới quan của người Ả Rập.</li>
+                        <li><strong>Nghiên cứu đối chiếu và dịch thuật (Bối cảnh Việt Nam)</strong>: Các nghiên cứu của giảng viên trong nước (Nguyễn, 2023) đặt song song thành ngữ MSA và thành ngữ Việt để sinh viên dễ dàng chuyển ngữ mượt mà.</li>
+                    </ul>
+                    
+                    <h5 class="text-base font-bold text-dreamSlate mt-4">3. Kết quả thu hoạch</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed">Học cách trích dẫn chuẩn Harvard và xây dựng một cấu trúc tổng quan khoa học giúp mở rộng vốn từ vựng cao cấp và phá vỡ rào cản tâm lý khi dịch thuật liên văn hóa Việt - Ả Rập.</p>
+                `
+            },
+            3: {
+                title: "Kỹ nghệ viết Prompt hỗ trợ học tập Triết học",
+                tag: "Bài tập thực hành 3",
+                icon: "fa-brain text-dreamPink",
+                intro: "Ứng dụng các kỹ thuật thiết kế prompt nâng cao để xây dựng bộ câu hỏi ôn tập chất lượng cao cho môn Triết học Mác - Lênin.",
+                details: `
+                    <h5 class="text-base font-bold text-dreamSlate">1. Sự tiến hóa của các Prompt</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed">Dự án đã thử nghiệm và so sánh hiệu quả của 3 mức độ viết prompt với AI:</p>
+                    <ul class="list-disc list-inside text-sm text-[#5E6F64] space-y-1 pl-2">
+                        <li><strong>Prompt Cơ bản</strong>: "Hãy tạo cho tôi 15 câu trắc nghiệm..." -> Kết quả nông, câu hỏi rời rạc và không phân bổ đều kiến thức cốt lõi.</li>
+                        <li><strong>Prompt Cải tiến</strong>: Giới hạn nội dung theo từng chương cụ thể và định dạng đầu ra rõ ràng.</li>
+                        <li><strong>Prompt Nâng cao (Role + CoT + Few-shot)</strong>: Thiết lập vai trò "Chuyên gia khảo thí", yêu cầu suy nghĩ từng bước (Chain-of-Thought) phân tích trọng tâm trước khi ra đề, cung cấp ví dụ mẫu chi tiết.</li>
+                    </ul>
+                    
+                    <h5 class="text-base font-bold text-dreamSlate mt-4">2. Thiết kế câu hỏi tự luận có tính thực tiễn</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed">Tạo câu hỏi tự luận kết hợp liên hệ thực tiễn cho sinh viên (áp dụng quy luật Lượng - Chất vào việc học tập đại học; liên hệ xu hướng kinh tế số vào Chương III), kèm theo hệ thống tiêu chí chấm điểm (Rubric) chi tiết.</p>
+                    
+                    <h5 class="text-base font-bold text-dreamSlate mt-4">3. Nguyên tắc vàng CREATE đúc rút</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed"><strong>Clarity</strong> (Rõ ràng), <strong>Role</strong> (Đóng vai), <strong>Examples</strong> (Ví dụ mẫu), <strong>Constraints</strong> (Giới hạn), <strong>Task & Context</strong> (Nhiệm vụ & Bối cảnh). Áp dụng thêm kỹ thuật "Split and Conquer" (Chia để trị) để thiết kế câu hỏi từng chương riêng biệt qua đối thoại.</p>
+                `
+            },
+            4: {
+                title: "Phát triển kỹ năng giao tiếp Email chuyên nghiệp",
+                tag: "Bài tập thực hành 4",
+                icon: "fa-envelope-open-text text-dreamGreen",
+                intro: "Thực hành xây dựng các mẫu giao tiếp bằng thư điện tử đúng quy chuẩn học thuật và doanh nghiệp.",
+                details: `
+                    <h5 class="text-base font-bold text-dreamSlate">1. Bốn tình huống giao tiếp thực chiến</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed">Mình đã soạn thảo chi tiết 4 loại email bao gồm:</p>
+                    <ul class="list-disc list-inside text-sm text-[#5E6F64] space-y-2 pl-2">
+                        <li><strong>Email xin thông tin giảng viên</strong>: Xin tài liệu nghiên cứu khoa học một cách lễ phép, khẳng định cam kết chỉ sử dụng vì mục đích học tập.</li>
+                        <li><strong>Email mời hợp tác nhóm với bạn học</strong>: Thư mời tham gia nhóm môn Giao tiếp liên văn hóa, trình bày rõ mục tiêu đạt điểm A, công cụ quản lý tiến độ (Trello/MS Teams) và deadline rõ ràng.</li>
+                        <li><strong>Email nộp đơn xin thực tập/việc làm</strong>: Ứng tuyển vị trí thực tập sinh biên dịch tiếng Anh, trình bày kỹ năng theo gạch đầu dòng rõ ràng để nhà tuyển dụng dễ scan thông tin.</li>
+                        <li><strong>Email giải quyết xung đột</strong>: Nhắc nhở một thành viên liên tục trễ deadline một cách văn minh, khéo léo, tập trung vào giải pháp hỗ trợ thay vì công kích cá nhân.</li>
+                    </ul>
+                    
+                    <h5 class="text-base font-bold text-dreamSlate mt-4">2. Chu trình cải tiến liên tục (Peer Feedback)</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed">Sau khi gửi bản thảo cho hai bạn học cùng lớp đóng góp ý kiến, mình đã bổ sung mốc thời gian rõ rệt cho nút kêu gọi hành động (CTA) và định dạng lại phần kinh nghiệm dịch thuật dưới dạng gạch đầu dòng in đậm từ khóa đắt giá.</p>
+                `
+            },
+            5: {
+                title: "Ứng dụng AI tạo sinh trong sáng tạo nội dung",
+                tag: "Bài tập thực hành 5",
+                icon: "fa-palette text-dreamPink",
+                intro: "Sử dụng các mô hình tạo sinh để so sánh nét đẹp văn hóa thưởng thức cà phê giữa hai thế giới Việt - Ả Rập.",
+                details: `
+                    <h5 class="text-base font-bold text-dreamSlate">1. Ý tưởng so sánh văn hóa độc đáo</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed">Dự án Infographic: <strong>"Cà phê Gừng (Gahwa) & Cà phê Muối: Câu chuyện văn hóa qua tách cà phê"</strong> nhằm tìm ra điểm tương đồng trong lòng hiếu khách (Tiếng Ả Rập: Al-Diyafah - ال ضِّ يَافَة) của cả hai quốc gia thông qua phong cách thưởng thức cà phê.</p>
+                    
+                    <h5 class="text-base font-bold text-dreamSlate mt-4">2. Quy trình đồng sáng tạo cùng AI</h5>
+                    <ul class="list-disc list-inside text-sm text-[#5E6F64] space-y-2 pl-2">
+                        <li><strong>AI Văn bản (Gemini/ChatGPT)</strong>: Lên khung sườn infographic, so sánh nguyên liệu (Gahwa dùng hạt cà phê xanh/vàng nhẹ, thảo mộc đinh hương, gừng; Cà phê muối Việt Nam dùng phin lọc truyền thống và lớp kem mặn mằn mòi).</li>
+                        <li><strong>AI Hình ảnh (DALL-E 3)</strong>: Thiết kế tranh minh họa màu nước nghệ thuật ấm áp, mô tả một bên là ấm Dallah truyền thống và một bên là phin cà phê muối ấm cúng phố cổ Hà Nội.</li>
+                        <li><strong>AI Thiết kế (Canva Magic Studio)</strong>: Sắp xếp bố cục thô, sau đó mình tự căn chỉnh thủ công typography, logo trường và các ký tự tiếng Ả Rập để tránh lỗi hiển thị hệ thống.</li>
+                    </ul>
+                    
+                    <h5 class="text-base font-bold text-dreamSlate mt-4">3. Nhận thức đạo đức & Thiên kiến văn hóa</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed">Phân tích sâu sắc ranh giới giữa việc "lấy cảm hứng" và chiếm đoạt công sức của nghệ sĩ thực thụ khi sử dụng ảnh màu nước AI. Đồng thời chỉ rõ thiên kiến văn hóa rập khuôn (Cultural Bias) của AI phương Tây khi dịch từ khóa "Ả Rập" (thường chỉ trả về sa mạc hoang vu, lạc đà mà bỏ qua tính hiện đại của Trung Đông ngày nay).</p>
+                `
+            },
+            6: {
+                title: "Đạo đức học thuật & Sử dụng AI có trách nhiệm",
+                tag: "Bài tập thực hành 6",
+                icon: "fa-shield-halved text-dreamGreen",
+                intro: "Định hình ranh giới lành mạnh giữa trợ lý thông minh và hành vi gian lận học thuật trong môi trường đại học.",
+                details: `
+                    <h5 class="text-base font-bold text-dreamSlate">1. Bản thuyết trình thực tế về ngôn ngữ</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed">Khi chuẩn bị bài thuyết trình về <em>'Tầm ảnh hưởng của tiếng Ả Rập đối với từ vựng tiếng Anh'</em>, AI gợi ý ví dụ về từ 'Safari'. Bằng tư duy độc lập, mình đã tự phản biện và phát hiện ra 'Safari' thực chất có gốc từ tiếng Swahili (Swahili mượn gốc từ tiếng Ả Rập 'safar'). Nhờ đó tránh được sai sót kiến thức sâu xa.</p>
+                    
+                    <h5 class="text-base font-bold text-dreamSlate mt-4">2. Khung chính sách của VNU & ULIS</h5>
+                    <p class="text-sm text-[#5E6F64] leading-relaxed">Hiểu rõ tinh thần "Chuyển đổi số gắn liền với Đạo đức học thuật". AI là công cụ hỗ trợ tư duy, không thay thế con người. Việc sao chép nguyên văn phản hồi của AI mà không xử lý, đối chiếu hay trích dẫn được coi là gian lận công nghệ.</p>
+                    
+                    <h5 class="text-base font-bold text-dreamSlate mt-4">3. Bộ 6 Nguyên tắc vàng cá nhân</h5>
+                    <ul class="list-decimal list-inside text-sm text-[#5E6F64] space-y-1 pl-2 font-light">
+                        <li><strong>"Người lái xe"</strong>: Mình điều khiển tư duy, AI chỉ là động cơ hỗ trợ.</li>
+                        <li><strong>"Kiểm chứng kép" (Fact-check)</strong>: Không bao giờ tin 100% số liệu của AI mà không đối chiếu.</li>
+                        <li><strong>"Minh bạch tuyệt đối"</strong>: Khai báo rõ ràng phần nào có AI can thiệp.</li>
+                        <li><strong>"Không Copy-Paste"</strong>: Viết lại mọi từ ngữ bằng chính văn phong của mình.</li>
+                        <li><strong>"Tập trung vào cốt lõi"</strong>: Không dùng AI để làm thay các bài tập rèn kỹ năng nền tảng (tập viết chữ Ả Rập, dịch thô).</li>
+                        <li><strong>"Bảo mật dữ liệu"</strong>: Tuyệt đối không đăng tải dữ liệu nội bộ hay thông tin cá nhân của thầy cô, bạn bè lên AI công cộng.</li>
+                    </ul>
+                `
+            }
+        };
+
+        // Open Project Modal and render content dynamically
+        function openProjectModal(id) {
+            const modal = document.getElementById('project-modal');
+            const content = document.getElementById('modal-content');
+            const body = document.getElementById('modal-body');
+            const project = projectData[id];
+
+            if (!project) return;
+
+            body.innerHTML = `
+                <div class="flex items-center gap-3 bg-dreamPink/10 text-dreamRose px-4 py-1.5 rounded-full text-xs font-semibold uppercase w-fit">
+                    <i class="fa-solid ${project.icon.split(' ')[0]}"></i> ${project.tag}
+                </div>
+                <h3 class="font-serif text-3xl font-bold text-[#2B3B30] mt-2">${project.title}</h3>
+                <p class="text-sm sm:text-base italic text-dreamGreen font-light leading-relaxed border-l-4 border-dreamGreen/30 pl-4">${project.intro}</p>
+                <hr class="border-dreamPink/10">
+                <div class="space-y-4 text-left">
+                    ${project.details}
+                </div>
+                <div class="pt-6 border-t border-dreamPink/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <p class="text-xs text-[#8C9B90] font-light">Học phần: Nhập môn công nghệ số & AI — Đặng Hồng Nhung</p>
+                    <a href="https://drive.google.com/drive/folders/1UoOynRfChTmO_h1SkFGS9jw6E_LCuGZY?usp=drive_link" target="_blank" class="bg-dreamGreen/10 text-dreamGreen hover:bg-dreamGreen hover:text-white px-5 py-2.5 rounded-full text-xs font-bold transition-all duration-300 flex items-center gap-2">
+                        <i class="fa-brands fa-google-drive"></i> Đọc báo cáo PDF đầy đủ
+                    </a>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            // Slight delay to allow transition effect
+            setTimeout(() => {
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 50);
+        }
+
+        // Close Project Modal
+        function closeProjectModal() {
+            const modal = document.getElementById('project-modal');
+            const content = document.getElementById('modal-content');
+
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // Close modal when clicking outside the box
+        window.onclick = function(event) {
+            const modal = document.getElementById('project-modal');
+            if (event.target === modal) {
+                closeProjectModal();
+            }
+        }
+    </script>
 </body>
 </html>
